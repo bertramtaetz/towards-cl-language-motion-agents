@@ -1,0 +1,101 @@
+/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/.venv/bin/python -m accelerate.commands.launch --num_processes 1 --mixed_precision bf16 --main_process_port 0 continual_learning/olora_multi_adapter/train_olora.py --training-task t2m --batch-size 2 --gradient-accumulation-steps 1 --learning-rate 1e-4 --no-wandb --pretrained-path /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/holdout10/t2m/multitask_final.pth --split-mode random_80_20 --split-seed 42 --out-dir /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/outputs/holdout_smoke/runs/t2m/olora_multi_adapter --epochs-per-task 1 --num-tasks 1 --train-split train --lambda-orth 0.5 --olora-target-modules full --gradient-checkpointing
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+2026-09-12 19:30:29,721 INFO ======================================================================
+2026-09-12 19:30:29,721 INFO O-LoRA MULTI-ADAPTER [T2M] TRAINING
+2026-09-12 19:30:29,721 INFO ======================================================================
+2026-09-12 19:30:29,721 INFO {
+    "training_task": "t2m",
+    "device": "cuda",
+    "learning_rate": 0.0001,
+    "batch_size": 2,
+    "gradient_accumulation_steps": 1,
+    "num_tasks": 1,
+    "epochs_per_task": 1,
+    "start_task": 0,
+    "train_split": "train",
+    "lambda_orth": 0.5,
+    "olora_target_modules": [
+        "o_proj",
+        "q_proj",
+        "up_proj",
+        "v_proj",
+        "k_proj",
+        "down_proj",
+        "gate_proj"
+    ],
+    "split_mode": "random_80_20",
+    "split_seed": 42,
+    "wandb_project": "motion-agent-olora",
+    "wandb_name": null,
+    "no_wandb": true,
+    "llm_backbone": "/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/gemma-2-2b-it",
+    "lora_r_t2m": 64,
+    "lora_alpha_t2m": 64,
+    "lora_r_m2t": 32,
+    "lora_alpha_m2t": 32,
+    "lora_dropout": 0.05,
+    "olora_r": 64,
+    "olora_alpha": 64,
+    "use_bf16": true,
+    "gradient_checkpointing": true,
+    "dataname": "t2m",
+    "code_dim": 512,
+    "nb_code": 512,
+    "mu": 0.99,
+    "down_t": 2,
+    "stride_t": 2,
+    "width": 512,
+    "depth": 3,
+    "dilation_growth_rate": 3,
+    "output_emb_width": 512,
+    "vq_act": "relu",
+    "vq_norm": null,
+    "quantizer": "ema_reset",
+    "beta": 1.0,
+    "out_dir": "/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/outputs/holdout_smoke/runs/t2m/olora_multi_adapter",
+    "vq_path": "/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/ckpt/vqvae.pth",
+    "pretrained_path": "/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/holdout10/t2m/multitask_final.pth",
+    "nb_joints": 22
+}
+2026-09-12 19:30:29,723 INFO Initializing MotionLLM...
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.46s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.48it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.26it/s]
+loading vqvae from /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/ckpt/vqvae.pth
+2026-09-12 19:30:35,797 INFO Merging pretrained t2m adapter: /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/holdout10/t2m/multitask_final.pth
+/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/.venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:167: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+Loading model from /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/holdout10/t2m/multitask_final.pth
+Merged pretrained t2m adapter into base model, fresh t2m LoRA added
+2026-09-12 19:30:36,732 INFO Gradient checkpointing enabled (base model)
+2026-09-12 19:30:36,732 INFO O-LoRA Manager: r=64, alpha=64, lambda_orth=0.5, targets=['o_proj', 'q_proj', 'up_proj', 'v_proj', 'k_proj', 'down_proj', 'gate_proj']
+2026-09-12 19:30:36,732 INFO 
+============================================================
+2026-09-12 19:30:36,732 INFO TASK 0 (task_1_jumping)
+2026-09-12 19:30:36,732 INFO Completed: 0
+2026-09-12 19:30:36,732 INFO ============================================================
+[O-LoRA Multi] Preparing Task 0 with adapter 'task_0'
+[O-LoRA Multi] Froze base adapter 't2m'
+[O-LoRA Multi] Froze base adapter 'm2t'
+[O-LoRA Multi] Created new adapter 'task_0'
+2026-09-12 19:30:36,964 INFO Adapter 'task_0': 83,066,880 trainable (2.99%)
+2026-09-12 19:30:36,966 INFO   Trainable LoRA params: 364
+2026-09-12 19:30:36,966 INFO   Frozen LoRA params:    364
+2026-09-12 19:30:36,967 INFO   Freeze verification PASSED for task 0 (adapter=task_0)
+Loading task_1_jumping - ALL data (20 motion IDs)...
+task_1_jumping:   0%|          | 0/20 [00:00<?, ?it/s]                                                        task_1_jumping [train]: 16 samples (from 20 total, 80/20 split)
+Task 0 Epoch 1/1:   0%|          | 0/8 [00:00<?, ?it/s]It is strongly recommended to train Gemma2 models with the `eager` attention implementation instead of `sdpa`. Use `eager` with `AutoModelForCausalLM.from_pretrained('<path-to-checkpoint>', attn_implementation='eager')`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+Task 0 Epoch 1/1:   0%|          | 0/8 [00:00<?, ?it/s, loss=5.018, task=5.018, orth=0.0000, acc=0.118]Task 0 Epoch 1/1:  12%|█▎        | 1/8 [00:00<00:03,  1.95it/s, loss=5.018, task=5.018, orth=0.0000, acc=0.118]Task 0 Epoch 1/1:  12%|█▎        | 1/8 [00:00<00:03,  1.95it/s, loss=4.842, task=4.842, orth=0.0000, acc=0.283]Task 0 Epoch 1/1:  25%|██▌       | 2/8 [00:00<00:01,  3.67it/s, loss=4.842, task=4.842, orth=0.0000, acc=0.283]Task 0 Epoch 1/1:  25%|██▌       | 2/8 [00:00<00:01,  3.67it/s, loss=4.738, task=4.738, orth=0.0000, acc=0.133]Task 0 Epoch 1/1:  38%|███▊      | 3/8 [00:00<00:00,  5.11it/s, loss=4.738, task=4.738, orth=0.0000, acc=0.133]Task 0 Epoch 1/1:  38%|███▊      | 3/8 [00:00<00:00,  5.11it/s, loss=4.075, task=4.075, orth=0.0000, acc=0.158]Task 0 Epoch 1/1:  50%|█████     | 4/8 [00:00<00:00,  6.26it/s, loss=4.075, task=4.075, orth=0.0000, acc=0.158]Task 0 Epoch 1/1:  50%|█████     | 4/8 [00:00<00:00,  6.26it/s, loss=4.827, task=4.827, orth=0.0000, acc=0.133]Task 0 Epoch 1/1:  62%|██████▎   | 5/8 [00:00<00:00,  7.19it/s, loss=4.827, task=4.827, orth=0.0000, acc=0.133]Task 0 Epoch 1/1:  62%|██████▎   | 5/8 [00:01<00:00,  7.19it/s, loss=5.629, task=5.629, orth=0.0000, acc=0.068]Task 0 Epoch 1/1:  75%|███████▌  | 6/8 [00:01<00:00,  7.93it/s, loss=5.629, task=5.629, orth=0.0000, acc=0.068]Task 0 Epoch 1/1:  75%|███████▌  | 6/8 [00:01<00:00,  7.93it/s, loss=5.786, task=5.786, orth=0.0000, acc=0.091]Task 0 Epoch 1/1:  88%|████████▊ | 7/8 [00:01<00:00,  8.45it/s, loss=5.786, task=5.786, orth=0.0000, acc=0.091]Task 0 Epoch 1/1:  88%|████████▊ | 7/8 [00:01<00:00,  8.45it/s, loss=5.084, task=5.084, orth=0.0000, acc=0.073]Task 0 Epoch 1/1: 100%|██████████| 8/8 [00:01<00:00,  8.83it/s, loss=5.084, task=5.084, orth=0.0000, acc=0.073]Task 0 Epoch 1/1: 100%|██████████| 8/8 [00:01<00:00,  6.48it/s, loss=5.084, task=5.084, orth=0.0000, acc=0.073]
+2026-09-12 19:30:39,839 INFO Task 0 Epoch 1/1: Total=5.0000, Task=5.0000, Orth=0.0000, Acc=0.1321, Time=1.2s
+[O-LoRA Multi] Completing Task 0...
+[O-LoRA Multi] Stored 182 A matrices for Task 0
+[O-LoRA Multi] Total completed tasks: 1
+2026-09-12 19:30:41,227 INFO Saved: /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/outputs/holdout_smoke/runs/t2m/olora_multi_adapter/olora_multi_task_0_best.pth
+2026-09-12 19:30:41,227 INFO Task 0 complete. Adapters: ['task_0']
+2026-09-12 19:30:41,463 INFO 
+============================================================
+2026-09-12 19:30:41,463 INFO O-LoRA [T2M] TRAINING COMPLETE
+2026-09-12 19:30:41,463 INFO Tasks: 1, Adapters: ['task_0']
+2026-09-12 19:30:41,463 INFO ============================================================

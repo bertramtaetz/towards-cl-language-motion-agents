@@ -1,0 +1,3 @@
+2.10.0+cu128
+NVIDIA GeForce RTX 5090
+CUDA forward/backward PASS

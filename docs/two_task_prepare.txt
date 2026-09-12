@@ -1,0 +1,5 @@
+Loading task_1_jumping - ALL data (504 motion IDs)...
+task_1_jumping:   0%|          | 0/504 [00:00<?, ?it/s]                                                         task_1_jumping [train]: 504 samples (from 504 total, 100/0 split)
+Loading task_2_arms_hands - ALL data (504 motion IDs)...
+task_2_arms_hands:   0%|          | 0/504 [00:00<?, ?it/s]                                                            task_2_arms_hands [train]: 504 samples (from 504 total, 100/0 split)
+/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/outputs/two_task_smoke

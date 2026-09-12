@@ -1,0 +1,494 @@
+{
+  "schema_version": 1,
+  "release_status": "incomplete",
+  "files": [
+    {
+      "path": "pretrained/ckpt/vqvae.pth",
+      "size": 78826058,
+      "sha256": "54874cf49ce978a1cd4a9a579e8ebbe8ffb4e4aeda2d84d746653a8a6da991e1",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/ckpt/motionllm.pth",
+      "size": 2862705082,
+      "sha256": "8ff841b5151cbb949bf11bc19e6e70ccd01c5afa65799b412d3f8e60feb748bb",
+      "profiles": [],
+      "url": null
+    },
+    {
+      "path": "pretrained/checkpoints/t2m/text_mot_match/model/finest.tar",
+      "size": 245580211,
+      "sha256": "881e45bea6fb84b15eca6e7cdd75d602b58a72f2038c223ee96ab75d4f684ada",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/checkpoints/t2m/Comp_v6_KLD005/opt.txt",
+      "size": 1047,
+      "sha256": "ca4f1004ad5428f282b21ea25686dab0b53af6a230768ac9bbfb9a4a6e506a62",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/checkpoints/t2m/VQVAEV3_CB1024_CMT_H1024_NRES3/meta/mean.npy",
+      "size": 2232,
+      "sha256": "0bdb5ba69a3a9e34d71990db15bc535ebc024c8d95ddb5574196f96058faa7d3",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/checkpoints/t2m/VQVAEV3_CB1024_CMT_H1024_NRES3/meta/std.npy",
+      "size": 2232,
+      "sha256": "6a5f7d60301c9465972fc225f8ad0ee8f957e7720431189123eb6d15873a9557",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/checkpoints/t2m/Comp_v6_KLD005/meta/mean.npy",
+      "size": 2232,
+      "sha256": "0bdb5ba69a3a9e34d71990db15bc535ebc024c8d95ddb5574196f96058faa7d3",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/checkpoints/t2m/Comp_v6_KLD005/meta/std.npy",
+      "size": 2232,
+      "sha256": "6a5f7d60301c9465972fc225f8ad0ee8f957e7720431189123eb6d15873a9557",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/glove/our_vab_words.pkl",
+      "size": 67470,
+      "sha256": "fac88da1be6f00d36b72b88c9745c8ac35a94a7bd6ccf1fa3bab380faf8c2e0d",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/glove/our_vab_idx.pkl",
+      "size": 79811,
+      "sha256": "d85dce83d2c27a92bb94bb51dc1f55a04fcaa328c359d23eccf648e296c16493",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/glove/our_vab_data.npy",
+      "size": 10077728,
+      "sha256": "73ed9b73ee5bc5ab683661c132b9f98fe305672dffdf70ceeac1bc447543d668",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/gemma-2-2b-it/tokenizer.json",
+      "size": 17525357,
+      "sha256": "3f289bc05132635a8bc7aca7aa21255efd5e18f3710f43e3cdb96bcd41be4922",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/gemma-2-2b-it/tokenizer_config.json",
+      "size": 46996,
+      "sha256": "cb32b7929c62608d46572e813112b3ad8a841fb98fdd6a4da8559e368a951c89",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/gemma-2-2b-it/model-00001-of-00002.safetensors",
+      "size": 4988025760,
+      "sha256": "532d792c9178805064170a3ec485b7dedbfccc6fd297b92c31a6091b6c7e41bf",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/gemma-2-2b-it/model.safetensors.index.json",
+      "size": 24223,
+      "sha256": "ada0043f3e3b2e5ab2f445cad9c0fbbf9d91ad444675e6a82b822591c63abf5a",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/gemma-2-2b-it/config.json",
+      "size": 838,
+      "sha256": "eacec6c5ca317a87ed2c46789d9705b9274db5027e7ba59da739bfae23addb55",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/gemma-2-2b-it/model-00002-of-00002.safetensors",
+      "size": 240691728,
+      "sha256": "6d6d9ce84db398fb6e0191f91542e5da0a73da2cb695e172a24edc2146dc8d20",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/gemma-2-2b-it/special_tokens_map.json",
+      "size": 636,
+      "sha256": "baec30ea10906f16adb8c18af7a34023002c1746542612b8b41c9f09e1351351",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/gemma-2-2b-it/generation_config.json",
+      "size": 187,
+      "sha256": "a543a5d299bc2b20c52bd87ed174f561266510b57a392e12b5b5d758d798ce05",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/gemma-2-2b-it/tokenizer.model",
+      "size": 4241003,
+      "sha256": "61a7b147390c64585d6c3543dd6fc636906c9af3865a5548f27f31aee1d4c8e2",
+      "profiles": [
+        "t2m",
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/roberta-large/tokenizer.json",
+      "size": 1355863,
+      "sha256": "847bbeab6174d66a88898f729d52fa8d355fafe1bea101cf960dd404581df70e",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/roberta-large/tokenizer_config.json",
+      "size": 25,
+      "sha256": "994f46754c5bf4014f1aa92d34b1374319c3a6b3f702105cd5b742beaecd18ce",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/roberta-large/model.safetensors",
+      "size": 1421700479,
+      "sha256": "047c85f0b96269cd62e6f732644f067004eebd95af5b5d35965ae2528f13bf38",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/roberta-large/vocab.json",
+      "size": 898823,
+      "sha256": "9e7f63c2d15d666b52e21d250d2e513b87c9b713cfa6987a82ed89e5e6e50655",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/roberta-large/config.json",
+      "size": 482,
+      "sha256": "82ba49810e6441735e696033ac2512ee09da555507b2917ac3865b202d592cc3",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/roberta-large/merges.txt",
+      "size": 456318,
+      "sha256": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/meteor/meteor-1.5.jar",
+      "size": 6318693,
+      "sha256": "1e57b4c72c0830ebe68558f1c799a624e96cbc1b6045c9f6330e26dcff6eafc2",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/spice-1.0.jar",
+      "size": 19751099,
+      "sha256": "6c6a73ae6dd108667047c1818707590413934dcb9f1a62cef6469059b41b3d59",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/meteor/data/paraphrase-en.gz",
+      "size": 61813011,
+      "sha256": "c147ac7d2c91f2fbb3ad31e4b352235061eb83145e0434daf217ee9ca5975f48",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/stanford-corenlp-3.6.0.jar",
+      "size": 7270741,
+      "sha256": "d341d5863276f55782c5ef73212222d6b3b48e02ae1951ab6de7618d28b12742",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/fst-2.47.jar",
+      "size": 380882,
+      "sha256": "8c871febc859cf72dbed1c6c1eebc5600c3d93c3e986feccf4623cc5086098cc",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/jackson-core-2.5.3.jar",
+      "size": 229998,
+      "sha256": "c9a900c30c702d371be2d3714938dfa6de616599c8eb39f8e3cf7aedd62dfd32",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/lmdbjni-0.4.6.jar",
+      "size": 85980,
+      "sha256": "f4e8c51eb4ef05abe57d2187e76f5c335e4ef16d8503329eb7dbc5ae7a90529c",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/Meteor-1.5.jar",
+      "size": 6318623,
+      "sha256": "014a3627d277a6f4ba5b44a20733f8dff28bbb428204c36abfda56565658ba09",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/slf4j-simple-1.7.21.jar",
+      "size": 10905,
+      "sha256": "a20179cc3ded2d7e2f5def4ccb34b2d0836e2f8c9e79352a6babd6a6559cc8e0",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/javassist-3.19.0-GA.jar",
+      "size": 749499,
+      "sha256": "d19c1ef43ccd9cb1b39466bb2f1c8e45c2b6752f1e13a3dfb60096543d1791fa",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/guava-19.0.jar",
+      "size": 2308517,
+      "sha256": "58d4cc2e05ebb012bbac568b032f75623be1cb6fb096f3c60c72a86f7f057de4",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/lmdbjni-win64-0.4.6.jar",
+      "size": 72671,
+      "sha256": "969c6aa59893b82856a6832da640672b0f23f1d72f70d7b04296c71970d75b79",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/hamcrest-core-1.3.jar",
+      "size": 45024,
+      "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/slf4j-api-1.7.12.jar",
+      "size": 32127,
+      "sha256": "0aee9a77a4940d72932b0d0d9557793f872e66a03f598e473f45e7efecdccf99",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/ejml-0.23.jar",
+      "size": 301506,
+      "sha256": "12d44e81fdd661ad2aac6384511facf3d8fa003c3ce8d9cec5f22827d1819a26",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/objenesis-2.4.jar",
+      "size": 51287,
+      "sha256": "090416e160a7e398f79e0149a7b05ef328b1843898a34e08c1cc170128d326d0",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/junit-4.12.jar",
+      "size": 314932,
+      "sha256": "59721f0805e223d84b90677887d9ff567dc534d7c502ca903c0c2b17f05c116a",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/lmdbjni-osx64-0.4.6.jar",
+      "size": 106300,
+      "sha256": "7d66778037b5689e7c6daf22a7140722f2085da4ae479bceda4a4be487d55460",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/json-simple-1.1.1.jar",
+      "size": 23931,
+      "sha256": "4e69696892b88b41c55d49ab2fdcc21eead92bf54acc588c0050596c3b75199c",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/stanford-corenlp-3.6.0-models.jar",
+      "size": 378116526,
+      "sha256": "d285157bd7887ee3018094b5dbae092e49088b023361ccdb550ee1daf9b2c9bd",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/SceneGraphParser-1.0.jar",
+      "size": 164039,
+      "sha256": "83a1b7c3f896dd135f9539ba41d65b155827dfc312893bfd5bb835c9f9ae310a",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/nlg/pycocoevalcap/spice/lib/lmdbjni-linux64-0.4.6.jar",
+      "size": 385952,
+      "sha256": "0b7773db873aaeec399a50113c0a4e121df0eff5e724607f7bc8171452107d94",
+      "profiles": [
+        "m2t"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/holdout10/t2m/multitask_final.pth",
+      "size": 2440792725,
+      "sha256": "9bb20dab977e928115954aa52c091ae6a07152f7bc31a8f1fc33c4764048c0df",
+      "profiles": [
+        "t2m",
+        "pretraining"
+      ],
+      "url": null
+    },
+    {
+      "path": "pretrained/holdout10/m2t/multitask_final.pth",
+      "size": 2440792725,
+      "sha256": "42eae07cda0cae3a769d4ec3151e27e4e29de226bc41be6d18df44e93eb93635",
+      "profiles": [
+        "m2t",
+        "pretraining"
+      ],
+      "url": null
+    }
+  ]
+}

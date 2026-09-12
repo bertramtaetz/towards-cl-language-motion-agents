@@ -1,0 +1,101 @@
+/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/.venv/bin/python -m accelerate.commands.launch --num_processes 1 --mixed_precision bf16 --main_process_port 0 continual_learning/olora_multi_adapter/train_olora.py --training-task m2t --batch-size 2 --gradient-accumulation-steps 1 --learning-rate 1e-4 --no-wandb --pretrained-path /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/ckpt/motionllm.pth --split-mode predefined --split-seed 42 --out-dir /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/outputs/smoke/engineering/m2t/olora_multi_adapter --epochs-per-task 1 --num-tasks 1 --train-split train --lambda-orth 0.5 --olora-target-modules full --gradient-checkpointing
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+2026-09-12 18:18:20,758 INFO ======================================================================
+2026-09-12 18:18:20,758 INFO O-LoRA MULTI-ADAPTER [M2T] TRAINING
+2026-09-12 18:18:20,758 INFO ======================================================================
+2026-09-12 18:18:20,759 INFO {
+    "training_task": "m2t",
+    "device": "cuda",
+    "learning_rate": 0.0001,
+    "batch_size": 2,
+    "gradient_accumulation_steps": 1,
+    "num_tasks": 1,
+    "epochs_per_task": 1,
+    "start_task": 0,
+    "train_split": "train",
+    "lambda_orth": 0.5,
+    "olora_target_modules": [
+        "o_proj",
+        "q_proj",
+        "up_proj",
+        "v_proj",
+        "k_proj",
+        "down_proj",
+        "gate_proj"
+    ],
+    "split_mode": "predefined",
+    "split_seed": 42,
+    "wandb_project": "motion-agent-olora",
+    "wandb_name": null,
+    "no_wandb": true,
+    "llm_backbone": "/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/gemma-2-2b-it",
+    "lora_r_t2m": 64,
+    "lora_alpha_t2m": 64,
+    "lora_r_m2t": 32,
+    "lora_alpha_m2t": 32,
+    "lora_dropout": 0.05,
+    "olora_r": 32,
+    "olora_alpha": 32,
+    "use_bf16": true,
+    "gradient_checkpointing": true,
+    "dataname": "t2m",
+    "code_dim": 512,
+    "nb_code": 512,
+    "mu": 0.99,
+    "down_t": 2,
+    "stride_t": 2,
+    "width": 512,
+    "depth": 3,
+    "dilation_growth_rate": 3,
+    "output_emb_width": 512,
+    "vq_act": "relu",
+    "vq_norm": null,
+    "quantizer": "ema_reset",
+    "beta": 1.0,
+    "out_dir": "/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/outputs/smoke/engineering/m2t/olora_multi_adapter",
+    "vq_path": "/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/ckpt/vqvae.pth",
+    "pretrained_path": "/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/ckpt/motionllm.pth",
+    "nb_joints": 22
+}
+2026-09-12 18:18:20,761 INFO Initializing MotionLLM...
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.56s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.39it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.18it/s]
+loading vqvae from /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/ckpt/vqvae.pth
+2026-09-12 18:18:27,117 INFO Merging pretrained m2t adapter: /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/ckpt/motionllm.pth
+/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/.venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:167: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+Loading model from /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/ckpt/motionllm.pth
+Merged pretrained m2t adapter into base model, fresh m2t LoRA added
+2026-09-12 18:18:27,965 INFO Gradient checkpointing enabled (base model)
+2026-09-12 18:18:27,965 INFO O-LoRA Manager: r=32, alpha=32, lambda_orth=0.5, targets=['o_proj', 'q_proj', 'up_proj', 'v_proj', 'k_proj', 'down_proj', 'gate_proj']
+2026-09-12 18:18:27,965 INFO 
+============================================================
+2026-09-12 18:18:27,965 INFO TASK 0 (task_1_running)
+2026-09-12 18:18:27,965 INFO Completed: 0
+2026-09-12 18:18:27,965 INFO ============================================================
+[O-LoRA Multi] Preparing Task 0 with adapter 'task_0'
+[O-LoRA Multi] Froze base adapter 't2m'
+[O-LoRA Multi] Froze base adapter 'm2t'
+[O-LoRA Multi] Created new adapter 'task_0'
+2026-09-12 18:18:28,182 INFO Adapter 'task_0': 41,533,440 trainable (1.54%)
+2026-09-12 18:18:28,184 INFO   Trainable LoRA params: 364
+2026-09-12 18:18:28,184 INFO   Frozen LoRA params:    364
+2026-09-12 18:18:28,186 INFO   Freeze verification PASSED for task 0 (adapter=task_0)
+Loading task_1_running [train] data...
+task_1_running:   0%|          | 0/4 [00:00<?, ?it/s]                                                       task_1_running [train]: 4 samples loaded
+Task 0 Epoch 1/1:   0%|          | 0/2 [00:00<?, ?it/s]It is strongly recommended to train Gemma2 models with the `eager` attention implementation instead of `sdpa`. Use `eager` with `AutoModelForCausalLM.from_pretrained('<path-to-checkpoint>', attn_implementation='eager')`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+Task 0 Epoch 1/1:   0%|          | 0/2 [00:00<?, ?it/s, loss=1.218, task=1.218, orth=0.0000, acc=0.714]Task 0 Epoch 1/1:  50%|█████     | 1/2 [00:00<00:00,  2.08it/s, loss=1.218, task=1.218, orth=0.0000, acc=0.714]Task 0 Epoch 1/1:  50%|█████     | 1/2 [00:00<00:00,  2.08it/s, loss=1.881, task=1.881, orth=0.0000, acc=0.516]Task 0 Epoch 1/1: 100%|██████████| 2/2 [00:00<00:00,  3.84it/s, loss=1.881, task=1.881, orth=0.0000, acc=0.516]Task 0 Epoch 1/1: 100%|██████████| 2/2 [00:00<00:00,  3.41it/s, loss=1.881, task=1.881, orth=0.0000, acc=0.516]
+2026-09-12 18:18:30,317 INFO Task 0 Epoch 1/1: Total=1.5493, Task=1.5493, Orth=0.0000, Acc=0.6152, Time=0.6s
+[O-LoRA Multi] Completing Task 0...
+[O-LoRA Multi] Stored 182 A matrices for Task 0
+[O-LoRA Multi] Total completed tasks: 1
+2026-09-12 18:18:31,622 INFO Saved: /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/outputs/smoke/engineering/m2t/olora_multi_adapter/olora_multi_task_0_best.pth
+2026-09-12 18:18:31,622 INFO Task 0 complete. Adapters: ['task_0']
+2026-09-12 18:18:31,886 INFO 
+============================================================
+2026-09-12 18:18:31,887 INFO O-LoRA [M2T] TRAINING COMPLETE
+2026-09-12 18:18:31,887 INFO Tasks: 1, Adapters: ['task_0']
+2026-09-12 18:18:31,887 INFO ============================================================

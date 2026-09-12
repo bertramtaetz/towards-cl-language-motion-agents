@@ -1,0 +1,475 @@
+"""
+Baseline T2M Evaluation -- Transfer Learning & Multitask
+
+Evaluates both baselines on the text-to-motion direction:
+- Token accuracy performance matrix R[i,j]  (forward pass, cheap)
+- Motion quality metrics at the final stage  (generation, expensive):
+      FID, R-Precision Top-1/2/3, Diversity, MM-Dist
+
+Methods:
+  - transfer:       shared single 't2m' LoRA adapter updated sequentially
+  - transfer_multi: per-task adapters (task_0..task_4) with O-LoRA-style switching
+                   (known task-id: task_j for j<=i else base 't2m')
+  - multitask:      shared single 't2m' adapter trained jointly
+
+Usage:
+    # Transfer learning -- all stages, token accuracy + final motion quality
+    python baselines/evaluate_baselines_t2m.py \
+        --method transfer \
+        --checkpoint-dir ../experiments/transfer_learning/t2m/v1 \
+        --output-dir ../experiments/transfer_learning/t2m/v1 \
+        --split test
+
+    # Token accuracy only (skip generation, much faster)
+    python baselines/evaluate_baselines_t2m.py \
+        --method transfer --skip-generation \
+        --checkpoint-dir ../experiments/transfer_learning/t2m/v1 \
+        --output-dir ../experiments/transfer_learning/t2m/v1 \
+        --split test
+"""
+
+from repo_paths import PRETRAINED, DATA_ROOT, TASK_SPLITS, BACKBONE, task_order
+
+import argparse
+import json
+import os
+import shutil
+import sys
+import tempfile
+from pathlib import Path
+
+import numpy as np
+import torch
+from tqdm import tqdm
+
+_BASELINES_DIR = Path(__file__).parent.resolve()
+_MOTION_AGENT_ROOT = _BASELINES_DIR.parent.resolve()
+_PROJECT_ROOT = _MOTION_AGENT_ROOT.parent
+
+sys.path.insert(0, str(_MOTION_AGENT_ROOT))
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+from models.mllm import MotionLLM
+from models.training_utils import process_batch
+from models.evaluator_wrapper import EvaluatorModelWrapper
+from options.get_eval_option import get_opt
+from utils.evaluation import evaluation_test
+from utils.word_vectorizer import WordVectorizer
+from continual_learning.utils.data_manager import get_task_loader, set_split_mode, TASK_NAMES
+
+NUM_TASKS = len(TASK_NAMES)
+TASK_DISPLAY_NAMES = {
+    "task_1_jumping": "Jumping",
+    "task_2_arms_hands": "Arms/Hands",
+    "task_3_walking": "Walking",
+    "task_4_gestures": "Gestures",
+    "task_5_sit_stand": "Sit/Stand",
+}
+TRANSFER_CHECKPOINT_NAMES = [
+    "after_task0_task_1_jumping.pth",
+    "after_task1_task_2_arms_hands.pth",
+    "after_task2_task_3_walking.pth",
+    "after_task3_task_4_gestures.pth",
+    "after_task4_task_5_sit_stand.pth",
+]
+T2M_QUALITY_METRICS = ["fid", "top1", "top2", "top3", "diversity", "mm_dist"]
+
+
+def _detect_task_adapters_from_state_dict(state_dict: dict) -> list[str]:
+    task_adapters = set()
+    for key in state_dict.keys():
+        for part in key.split("."):
+            if part.startswith("task_") and part[5:].isdigit():
+                task_adapters.add(part)
+    return sorted(task_adapters, key=lambda s: int(s.split("_")[1]))
+
+
+def load_baseline_checkpoint(checkpoint_path, args, device):
+    """Load a baseline checkpoint.
+
+    NOTE:
+      - transfer/multitask: merge-then-adapt (matches training)
+      - transfer_multi: DO NOT merge pretrained adapter into base weights;
+        the checkpoint already contains the direction adapter + per-task adapters.
+    """
+
+    print(f"\nLoading checkpoint: {checkpoint_path}")
+    model = MotionLLM(args).to(device)
+
+    if args.method in {"transfer", "multitask"}:
+        if hasattr(args, 'pretrained_path') and os.path.exists(args.pretrained_path):
+            print(f"  Merging pretrained t2m adapter from {args.pretrained_path}")
+            model.merge_pretrained_adapter(args.pretrained_path, "t2m")
+    else:
+        # transfer_multi: add task adapters before load_model.
+        sd = torch.load(checkpoint_path, map_location="cpu")
+        task_adapters = _detect_task_adapters_from_state_dict(sd)
+        if task_adapters:
+            existing = set(getattr(model.llm, "peft_config", {}).keys())
+            for name in task_adapters:
+                if name not in existing:
+                    model.llm.add_adapter(name, model.lora_config_t2m)
+            print(f"  Added task adapters: {task_adapters}")
+
+    model.load_model(checkpoint_path)
+    model.training_task = "t2m"
+    model.llm.set_adapter("t2m")
+    model.eval()
+    print("  Model loaded")
+    return model
+
+
+def compute_token_accuracy(model, loader, device, adapter_name: str = "t2m"):
+    """Compute T2M token accuracy with a specific adapter."""
+    model.eval()
+    model.llm.set_adapter(adapter_name)
+    all_losses, all_accs = [], []
+
+    with torch.no_grad():
+        for batch in tqdm(loader, desc=f"    [{adapter_name}] token acc", leave=False):
+            word_emb, pos_oh, caption, sent_len, motion, m_length, tokens, name = batch
+            motion_tokens = []
+            for i in range(motion.size(0)):
+                m = motion[i:i + 1, :m_length[i], :].to(device)
+                tok = model.net.encode(m).squeeze(0)
+                tok_remapped = torch.from_numpy(
+                    model.motion_token_indices[tok.cpu().numpy()]
+                ).to(device)
+                motion_tokens.append(tok_remapped)
+
+            inputs_ids, targets, attention_mask = process_batch(
+                tokenizer=model.tokenizer,
+                batch_of_captions=list(caption),
+                max_tgt_len=200,
+                batch_of_motions=motion_tokens,
+                training_task="t2m",
+            )
+            inputs_ids = inputs_ids.to(device)
+            attention_mask = attention_mask.to(device)
+            targets = targets.to(device)
+
+            outputs = model.llm(
+                input_ids=inputs_ids,
+                attention_mask=attention_mask,
+                return_dict=True,
+                labels=targets,
+            )
+
+            loss = outputs.loss.item()
+            chosen = torch.max(outputs.logits, dim=-1)[1][:, 1:-1]
+            lbls = targets[:, 2:]
+            correct = (chosen.reshape(-1) == lbls.reshape(-1)).long()
+            valid_mask = (lbls != -100).reshape(-1)
+            acc = (correct & valid_mask).sum().item() / (valid_mask.sum().item() + 1.0)
+            all_losses.append(loss)
+            all_accs.append(acc)
+
+    return float(np.mean(all_losses)), float(np.mean(all_accs))
+
+
+def compute_motion_quality(model, loader, eval_wrapper, temp_dir, adapter_name: str = "t2m"):
+    """Generate motions with a specific adapter and compute quality metrics."""
+    model.eval()
+    model.adapter_override = adapter_name
+    fid, div, top1, top2, top3, mm_dist = evaluation_test(
+        temp_dir, loader, model,
+        eval_wrapper=eval_wrapper, draw=False, savenpy=False,
+    )
+    model.adapter_override = None
+    return {
+        "fid": float(fid), "top1": float(top1), "top2": float(top2),
+        "top3": float(top3), "diversity": float(div), "mm_dist": float(mm_dist),
+    }
+
+
+def evaluate_task(model, task_id, stage, split, w_vectorizer, args,
+                  eval_wrapper, temp_dir, with_generation):
+    device = torch.device(args.device)
+    task_name = TASK_NAMES[task_id]
+
+    if args.method == "transfer_multi":
+        adapter_name = f"task_{task_id}" if task_id <= stage else "t2m"
+    else:
+        adapter_name = "t2m"
+
+    print(f"  Task {task_id} ({task_name}), adapter={adapter_name}")
+
+    loader = get_task_loader(
+        dataset_name="t2m", split=split, batch_size=args.batch_size,
+        w_vectorizer=w_vectorizer, task_id=task_id, num_workers=0,
+        unit_length=2 ** args.down_t,
+    )
+    n_samples = len(loader.dataset)
+    print(f"    {n_samples} samples in {split} split")
+
+    loss, accuracy = compute_token_accuracy(model, loader, device, adapter_name=adapter_name)
+    print(f"    Loss={loss:.4f}, Accuracy={accuracy:.4f} ({accuracy * 100:.2f}%)")
+
+    result = {
+        "task_id": task_id, "task_name": task_name, "adapter_used": adapter_name,
+        "n_samples": n_samples, "loss": loss, "accuracy": accuracy,
+    }
+
+    if with_generation and eval_wrapper is not None:
+        print("    Generating motions for quality metrics...")
+        quality = compute_motion_quality(model, loader, eval_wrapper, temp_dir, adapter_name=adapter_name)
+        result.update(quality)
+        print(f"    FID={quality['fid']:.4f}, Top1={quality['top1']:.4f}, "
+              f"Div={quality['diversity']:.4f}, MM-Dist={quality['mm_dist']:.4f}")
+
+    return result
+
+
+def evaluate_stage(stage, checkpoint_path, output_dir, split, w_vectorizer,
+                   args, eval_wrapper, temp_dir, with_generation, is_final_stage):
+    device = torch.device(args.device)
+    print(f"\n{'=' * 70}")
+    print(f"STAGE {stage} -- {checkpoint_path}")
+    print(f"{'=' * 70}")
+
+    model = load_baseline_checkpoint(checkpoint_path, args, device)
+
+    per_task_results = {}
+    for task_id in range(NUM_TASKS):
+        task_name = TASK_NAMES[task_id]
+        per_task_results[task_name] = evaluate_task(
+            model=model, task_id=task_id, stage=stage, split=split,
+            w_vectorizer=w_vectorizer, args=args,
+            eval_wrapper=eval_wrapper, temp_dir=temp_dir,
+            # Generation is controlled at the stage level by the caller.
+            # Default pipeline: only final stage generates.
+            # Optional: generate metrics for all stages for meaningful BWT/FWT.
+            with_generation=with_generation,
+        )
+
+    avg = {}
+    for k in ["loss", "accuracy"] + T2M_QUALITY_METRICS:
+        vals = [per_task_results[t][k] for t in TASK_NAMES if k in per_task_results[t]]
+        if vals:
+            avg[k] = float(np.mean(vals))
+
+    output = {
+        "stage": f"after_task{stage}",
+        "checkpoint": str(checkpoint_path),
+        "split": split,
+        "evaluation_protocol": "T2M (Guo et al. 2022a: FID, R-Precision, Diversity, MM-Dist)",
+        "method": args.method,
+        "task_order": TASK_NAMES,
+        "per_task": per_task_results,
+        "average": avg,
+    }
+
+    # Summary table
+    print(f"\n  Stage {stage} summary:")
+    hdr = f"  {'Task':<25} {'Loss':>7} {'Acc%':>7}"
+    if with_generation:
+        hdr += f" {'FID':>8} {'Top1':>7} {'Div':>8} {'MMDist':>8}"
+    print(hdr)
+    for task_name in TASK_NAMES:
+        r = per_task_results[task_name]
+        disp = TASK_DISPLAY_NAMES.get(task_name, task_name)
+        line = f"  {disp:<25} {r['loss']:>7.4f} {r['accuracy'] * 100:>7.2f}"
+        if with_generation:
+            line += (f" {r.get('fid', 0):>8.4f} {r.get('top1', 0):>7.4f}"
+                     f" {r.get('diversity', 0):>8.4f} {r.get('mm_dist', 0):>8.4f}")
+        print(line)
+
+    out_path = output_dir / "eval_results"
+    out_path.mkdir(parents=True, exist_ok=True)
+    out_file = out_path / f"after_task{stage}_{split}.json"
+    with open(out_file, "w") as f:
+        json.dump(output, f, indent=2)
+    print(f"\n  Saved: {out_file}")
+
+    del model
+    torch.cuda.empty_cache()
+    return output
+
+
+def parse_args():
+    p = argparse.ArgumentParser(description="Baseline T2M Evaluation (Transfer / Multitask)")
+    p.add_argument(
+        "--method",
+        type=str,
+        required=True,
+        choices=["transfer", "transfer_multi", "multitask"],
+        help="Which baseline method to evaluate.",
+    )
+    p.add_argument("--checkpoint-dir", type=str, required=True)
+    p.add_argument("--output-dir", type=str, required=True)
+    p.add_argument("--split", type=str, default="test", choices=["train", "val", "test"])
+    p.add_argument("--stage", type=int, default=None)
+    p.add_argument("--batch-size", type=int, default=16)
+    p.add_argument("--device", type=str, default="cuda:0")
+    p.add_argument("--skip-generation", action="store_true",
+                   help="Skip motion generation (token accuracy only)")
+    p.add_argument("--generate-all-stages", action="store_true",
+                   help="If set, compute motion quality metrics for EVERY stage (very slow). "
+                        "Default: only final stage generates motions.")
+    p.add_argument("--llm-backbone", type=str, default=BACKBONE)
+    p.add_argument("--lora-r-t2m", type=int, default=64)
+    p.add_argument("--lora-alpha-t2m", type=int, default=64)
+    p.add_argument("--lora-r-m2t", type=int, default=32)
+    p.add_argument("--lora-alpha-m2t", type=int, default=32)
+    p.add_argument("--lora-dropout", type=float, default=0.05)
+
+    # Capacity scaling (must match training if used)
+    p.add_argument(
+        "--capacity-multiplier",
+        type=int,
+        default=1,
+        help=(
+            "Scale LoRA rank and alpha by this factor for the active direction adapter. "
+            "Use the same value as training (e.g., 5) to match parameter budget."
+        ),
+    )
+
+    # LoRA capacity alignment (optional)
+    p.add_argument(
+        "--lora-target-modules-t2m",
+        type=str,
+        default="full",
+        help="LoRA target modules for t2m adapter: 'full', 'qv', or comma-separated module names",
+    )
+    p.add_argument(
+        "--lora-target-modules-m2t",
+        type=str,
+        default="full",
+        help="LoRA target modules for m2t adapter: 'full', 'qv', or comma-separated module names",
+    )
+    p.add_argument("--nb-code", type=int, default=512)
+    p.add_argument("--code-dim", type=int, default=512)
+    p.add_argument("--output-emb-width", type=int, default=512)
+    p.add_argument("--down-t", type=int, default=2)
+    p.add_argument("--stride-t", type=int, default=2)
+    p.add_argument("--width", type=int, default=512)
+    p.add_argument("--depth", type=int, default=3)
+    p.add_argument("--dilation-growth-rate", type=int, default=3)
+    p.add_argument("--vq-act", type=str, default="relu")
+    p.add_argument("--vq-norm", type=str, default=None)
+    p.add_argument("--quantizer", type=str, default="ema_reset")
+    p.add_argument("--mu", type=float, default=0.99)
+    p.add_argument("--beta", type=float, default=1.0)
+    p.add_argument("--pretrained-path", type=str,
+                   default=str(Path(__file__).parent.parent.resolve() / "experiments"
+                               / "pretrained" / "motionllm_fixed_v1" / "motionllm.pth"),
+                   help="Path to pretrained motionllm.pth for merge-then-adapt")
+
+    # Split protocol alignment (optional)
+    p.add_argument(
+        "--split-mode",
+        type=str,
+        default="random_80_20",
+        choices=["predefined", "random_80_20"],
+        help="Data split mode. Use 'random_80_20' to match O-LoRA defaults.",
+    )
+    p.add_argument(
+        "--split-seed",
+        type=int,
+        default=42,
+        help="Random seed used when split-mode is random_80_20",
+    )
+    args = p.parse_args()
+    args.training_task = "t2m"
+    args.nb_joints = 22
+    args.dataname = "t2m"
+
+    if args.capacity_multiplier < 1:
+        raise ValueError("--capacity-multiplier must be >= 1")
+    # Apply scaling to the adapter that is actually evaluated.
+    args.lora_r_t2m *= args.capacity_multiplier
+    args.lora_alpha_t2m *= args.capacity_multiplier
+
+    return args
+
+
+def main():
+    args = parse_args()
+    ckpt_dir = Path(args.checkpoint_dir)
+    output_dir = Path(args.output_dir)
+    with_generation = not args.skip_generation
+
+    # Align split protocol with O-LoRA / comparable baselines.
+    set_split_mode(args.split_mode, args.split_seed)
+
+    print("=" * 70)
+    print(f"Baseline T2M Evaluation -- {args.method.upper()}")
+    print("=" * 70)
+    print(f"Checkpoint dir: {ckpt_dir}")
+    print(f"Output dir:     {output_dir}")
+    print(f"Split:          {args.split}")
+    print(f"Device:         {args.device}")
+    print(f"Generation:     {'enabled (final stage only)' if with_generation else 'disabled'}")
+
+    if args.method in {"transfer", "transfer_multi"}:
+        stages = [args.stage] if args.stage is not None else list(range(NUM_TASKS))
+        checkpoints = {s: ckpt_dir / TRANSFER_CHECKPOINT_NAMES[s] for s in stages}
+    else:
+        stages = [NUM_TASKS - 1]
+        checkpoints = {NUM_TASKS - 1: ckpt_dir / "multitask_final.pth"}
+
+    for s, path in checkpoints.items():
+        if not path.exists():
+            print(f"ERROR: checkpoint not found: {path}")
+            sys.exit(1)
+    print(f"Stages: {stages}")
+
+    print("\nLoading word vectorizer...")
+    w_vectorizer = WordVectorizer(str(PRETRAINED / 'glove'), "our_vab")
+
+    eval_wrapper = None
+    temp_dir = None
+    if with_generation:
+        print("Loading EvaluatorModelWrapper for T2M quality metrics...")
+        opt_path = str(PRETRAINED / 'checkpoints' / "t2m" / "Comp_v6_KLD005" / "opt.txt")
+        wrapper_opt = get_opt(opt_path, args.device)
+        eval_wrapper = EvaluatorModelWrapper(wrapper_opt)
+        temp_dir = tempfile.mkdtemp(prefix="t2m_eval_")
+        print(f"  Temp dir: {temp_dir}")
+
+    try:
+        all_results = {}
+        for stage in stages:
+            # Default behaviour: generation only at final stage (stage 4)
+            # Optional: enable generation at all stages for meaningful quality-metric BWT/FWT.
+            is_final = stage == max(stages)
+            with_generation_for_stage = with_generation and (
+                args.generate_all_stages or is_final
+            )
+            stage_results = evaluate_stage(
+                stage=stage, checkpoint_path=str(checkpoints[stage]),
+                output_dir=output_dir, split=args.split,
+                w_vectorizer=w_vectorizer, args=args,
+                eval_wrapper=eval_wrapper, temp_dir=temp_dir,
+                with_generation=with_generation_for_stage, is_final_stage=is_final,
+            )
+            all_results[f"after_task{stage}"] = stage_results
+
+        if len(stages) > 1:
+            print("\n" + "=" * 70)
+            print("TOKEN ACCURACY MATRIX  R[stage, task]")
+            print("=" * 70)
+            hdr = f"{'Stage':<12}" + "".join(
+                f"{TASK_DISPLAY_NAMES.get(t, t)[:10]:>12}" for t in TASK_NAMES)
+            print(hdr)
+            print("-" * (12 + 12 * NUM_TASKS))
+            for stage in stages:
+                row = f"After T{stage}   "
+                for t in TASK_NAMES:
+                    acc = all_results[f"after_task{stage}"]["per_task"][t]["accuracy"]
+                    row += f"{acc * 100:>12.2f}"
+                print(row)
+            print("=" * 70)
+
+        print("\nDone.")
+        if args.method in {"transfer", "transfer_multi"}:
+            print("Next: compute_cl_metrics_token_acc.py and compute_cl_metrics_t2m.py")
+
+    finally:
+        if temp_dir and os.path.exists(temp_dir):
+            shutil.rmtree(temp_dir)
+            print(f"Cleaned up temp dir: {temp_dir}")
+
+
+if __name__ == "__main__":
+    main()

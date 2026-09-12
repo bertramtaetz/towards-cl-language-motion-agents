@@ -1,0 +1,51 @@
+======================================================================
+O-LoRA Multi-Adapter T2M Evaluation
+======================================================================
+Experiment: outputs/smoke/engineering/t2m/olora_multi_adapter
+Split:      test
+Device:     cuda:0
+Tasks:      1
+Generation: enabled (final stage only)
+Stages:     [0]
+
+Loading word vectorizer...
+Loading EvaluatorModelWrapper for T2M quality metrics...
+Reading /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/checkpoints/t2m/Comp_v6_KLD005/opt.txt
+Loading Evaluation Model Wrapper (Epoch 28) Completed!!
+  Temp dir: /tmp/olora_t2m_eval_indzo5al
+
+======================================================================
+STAGE 0 -- outputs/smoke/engineering/t2m/olora_multi_adapter/olora_multi_task_0_best.pth
+======================================================================
+
+Loading checkpoint: outputs/smoke/engineering/t2m/olora_multi_adapter/olora_multi_task_0_best.pth
+  Found task adapters: ['task_0']
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.65it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.02it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.69it/s]
+/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/.venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:167: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+loading vqvae from /home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/pretrained/ckpt/vqvae.pth
+  Merging pretrained t2m adapter from pretrained/ckpt/motionllm.pth
+Loading model from pretrained/ckpt/motionllm.pth
+Merged pretrained t2m adapter into base model, fresh t2m LoRA added
+  Added adapters: ['task_0']
+  Loaded embeddings: torch.Size([514, 2304])
+  Loaded lm_head: torch.Size([514, 2304])
+  Loaded 364 LoRA parameters
+  Task 0 (task_1_running), adapter=task_0
+Loading task_1_running [test] data...
+task_1_running:   0%|          | 0/4 [00:00<?, ?it/s]                                                       task_1_running [test]: 4 samples loaded
+    4 samples in test split
+    [task_0] token acc:   0%|          | 0/1 [00:00<?, ?it/s]    [task_0] token acc: 100%|██████████| 1/1 [00:00<00:00,  4.20it/s]                                                                         Loss=0.2912, Accuracy=0.9333 (93.33%)
+    Generating motions (adapter=task_0)...
+--> 	 FID. 3.8486, Diversity Real. 3.5198, Diversity. 4.2933, R_precision_real. [0.5  0.75 1.  ], R_precision. [0.5  0.75 1.  ], mm_dist_real. 2.5385777950286865, mm_dist_pred. 2.630068302154541
+    FID=3.8486, Top1=0.5000, Div=4.2933, MM-Dist=2.6301
+
+  Stage 0 summary:
+  Task                      Adapter       Loss    Acc%      FID    Top1      Div   MMDist
+  Running                   task_0      0.2912   93.33   3.8486  0.5000   4.2933   2.6301
+
+  Saved: outputs/smoke/engineering/t2m/olora_multi_adapter/eval_results/after_task0_test.json
+
+Done.
+Next: compute_cl_metrics_token_acc.py and compute_cl_metrics_t2m.py
+Cleaned up temp dir: /tmp/olora_t2m_eval_indzo5al

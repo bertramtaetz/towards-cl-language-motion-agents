@@ -1,0 +1,42 @@
+baselines/train_multitask.py 0
+unsupported flags: []
+baselines/evaluate_baselines_t2m.py 0
+unsupported flags: []
+continual_learning/compute_cl_metrics_token_acc.py 1
+  File "/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/Motion-Agent/continual_learning/compute_cl_metrics_token_acc.py", line 34
+    from __future__ import annotations
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: from __future__ imports must occur at the beginning of the file
+
+continual_learning/compute_cl_metrics_t2m.py 0
+unsupported flags: []
+baselines/train_transfer.py 0
+unsupported flags: []
+continual_learning/olora_multi_adapter/train_olora.py 0
+unsupported flags: []
+continual_learning/olora_multi_adapter/evaluate_olora_t2m.py 0
+unsupported flags: []
+continual_learning/olora_multi_adapter_merged/train_olora_merged.py 0
+unsupported flags: []
+continual_learning/olora_multi_adapter_merged/evaluate_olora_t2m_merged.py 0
+unsupported flags: []
+continual_learning/olora_moe/train_olora_moe.py 0
+unsupported flags: []
+continual_learning/olora_moe/evaluate_olora_t2m_moe.py 0
+unsupported flags: []
+continual_learning/olora_moe_joined/train_olora_moe_joined.py 0
+unsupported flags: []
+continual_learning/olora_moe_joined/evaluate_olora_t2m_moe_joined.py 0
+unsupported flags: []
+baselines/evaluate_baselines_m2t.py 0
+unsupported flags: []
+continual_learning/compute_cl_metrics_m2t.py 0
+unsupported flags: []
+continual_learning/olora_multi_adapter/evaluate_olora_m2t.py 0
+unsupported flags: []
+continual_learning/olora_multi_adapter_merged/evaluate_olora_m2t_merged.py 0
+unsupported flags: []
+continual_learning/olora_moe/evaluate_olora_m2t_moe.py 0
+unsupported flags: []
+continual_learning/olora_moe_joined/evaluate_olora_m2t_moe_joined.py 0
+unsupported flags: []

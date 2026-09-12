@@ -1,0 +1,11 @@
+Loading task_1_jumping - ALL data (504 motion IDs)...
+task_1_jumping:   0%|          | 0/504 [00:00<?, ?it/s]task_1_jumping:  41%|████      | 207/504 [00:00<00:00, 2060.61it/s]task_1_jumping:  82%|████████▏ | 414/504 [00:00<00:00, 2061.68it/s]                                                                     task_1_jumping [train]: 504 samples (from 504 total, 100/0 split)
+Loading task_2_arms_hands - ALL data (504 motion IDs)...
+task_2_arms_hands:   0%|          | 0/504 [00:00<?, ?it/s]task_2_arms_hands:  35%|███▍      | 176/504 [00:00<00:00, 1759.02it/s]task_2_arms_hands:  70%|███████   | 355/504 [00:00<00:00, 1776.67it/s]                                                                        task_2_arms_hands [train]: 504 samples (from 504 total, 100/0 split)
+Loading task_3_walking - ALL data (504 motion IDs)...
+task_3_walking:   0%|          | 0/504 [00:00<?, ?it/s]task_3_walking:  38%|███▊      | 189/504 [00:00<00:00, 1888.64it/s]task_3_walking:  75%|███████▌  | 378/504 [00:00<00:00, 1878.11it/s]                                                                     task_3_walking [train]: 504 samples (from 504 total, 100/0 split)
+Loading task_4_gestures - ALL data (504 motion IDs)...
+task_4_gestures:   0%|          | 0/504 [00:00<?, ?it/s]task_4_gestures:  40%|████      | 204/504 [00:00<00:00, 2030.55it/s]task_4_gestures:  81%|████████  | 408/504 [00:00<00:00, 2005.75it/s]                                                                      task_4_gestures [train]: 504 samples (from 504 total, 100/0 split)
+Loading task_5_sit_stand - ALL data (504 motion IDs)...
+task_5_sit_stand:   0%|          | 0/504 [00:00<?, ?it/s]task_5_sit_stand:  35%|███▌      | 178/504 [00:00<00:00, 1776.93it/s]task_5_sit_stand:  71%|███████   | 356/504 [00:00<00:00, 1771.06it/s]                                                                       task_5_sit_stand [train]: 504 samples (from 504 total, 100/0 split)
+/home/taetz/Shared_Projects/continual_learning/CL_Motion_Agent_Hugo/collas_repo_final/outputs/holdout_smoke

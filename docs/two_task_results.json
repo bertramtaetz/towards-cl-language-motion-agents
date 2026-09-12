@@ -1,0 +1,308 @@
+{
+  "engineering_smoke_only": true,
+  "generation_metrics": "NOT TESTED",
+  "runs": {
+    "t2m/multi_task": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.1875,
+            0.79
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "t2m/transfer_learning": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          0,
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.1875,
+            0.755
+          ],
+          [
+            0.1875,
+            0.765
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "t2m/olora_multi_adapter": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          0,
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.1785159285159285,
+            0.7663958787398455
+          ],
+          [
+            0.1684149184149184,
+            0.7025460669704775
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "t2m/olora_multi_adapter_merged": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          0,
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.18492618492618493,
+            0.7663958787398455
+          ],
+          [
+            0.14549339549339552,
+            0.7863086982365761
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "t2m/olora_moe": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          0,
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.19871795549988747,
+            0.7663958668708801
+          ],
+          [
+            0.1669178307056427,
+            0.771497905254364
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "t2m/olora_moe_joined": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          0,
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.11655011959373951,
+            0.5635526031255722
+          ],
+          [
+            0.11655011959373951,
+            0.7161184847354889
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "m2t/multi_task": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.3709677419354839,
+            0.4153846153846154
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "m2t/transfer_learning": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          0,
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.38961038961038963,
+            0.3888888888888889
+          ],
+          [
+            0.49122807017543857,
+            0.2916666666666667
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "m2t/olora_multi_adapter": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          0,
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.55,
+            0.5333333333333333
+          ],
+          [
+            0.5019305019305019,
+            0.54009009009009
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "m2t/olora_multi_adapter_merged": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          0,
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.46862745098039216,
+            0.5144563167818982
+          ],
+          [
+            0.4175438596491228,
+            0.4356763925729443
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "m2t/olora_moe": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          0,
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.49480311075846356,
+            0.5138600021600723
+          ],
+          [
+            0.4591093162695567,
+            0.5817094047864279
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    },
+    "m2t/olora_moe_joined": {
+      "train": "PASSED",
+      "eval": "PASSED",
+      "metrics": {
+        "stages": [
+          0,
+          1
+        ],
+        "task_names": [
+          "task_1_jumping",
+          "task_2_arms_hands"
+        ],
+        "accuracy_matrix": [
+          [
+            0.3703703780968984,
+            0.44949495792388916
+          ],
+          [
+            0.40296052396297455,
+            0.34685673005878925
+          ]
+        ],
+        "engineering_smoke_only": true,
+        "generation_metrics": "NOT TESTED"
+      }
+    }
+  }
+}

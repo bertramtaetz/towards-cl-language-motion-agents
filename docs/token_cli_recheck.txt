@@ -1,0 +1,10 @@
+usage: compute_cl_metrics_token_acc.py [-h] --exp-dir EXP_DIR [--split SPLIT]
+                                       [--output-dir OUTPUT_DIR]
+
+Compute CL metrics (token accuracy)
+
+options:
+  -h, --help            show this help message and exit
+  --exp-dir EXP_DIR
+  --split SPLIT
+  --output-dir OUTPUT_DIR
