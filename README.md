@@ -1,8 +1,6 @@
 # Towards Continual Motion-Language Agents
 
-Companion implementation for arXiv:2606.30266. This extraction uses the original
-`msai-thesis` motion-cluster holdout benchmark, not a claim of exact paper reproduction.
-The legacy O-LoRA implementation is excluded.
+Companion implementation to preprint [Towards Continual Motion-Language Agents: LoRA Variants for Incremental Motion Understanding and Generation](https://arxiv.org/abs/2606.30266).
 
 ## Available and validated
 
